@@ -7,7 +7,7 @@ struct VersionKit: BuildToolPlugin {
         let arguments = ["describe", "--tags", "--abbrev=0"]
 
         let toolCommand = Command.prebuildCommand(
-            displayName: "Git describe",
+            displayName: "Show the most recent git tag",
             executable: executable,
             arguments: arguments,
             outputFilesDirectory: context.pluginWorkDirectory

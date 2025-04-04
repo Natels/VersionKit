@@ -1,23 +1,23 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1.0
 
 import PackageDescription
 
 let package = Package(
     name: "VersionKit",
     products: [
-        .plugin(name: "VersionKit", targets: ["VersionKit"]),
-        .executable(name: "VersionKitTest", targets: ["VersionKitTest"]),
+        .library(
+            name: "VersionKit",
+            targets: ["VersionKit"]
+        ),
     ],
     targets: [
-        .plugin(
+        .target(
             name: "VersionKit",
-            capability: .buildTool()
+            dependencies: []
         ),
-        .executableTarget(
-            name: "VersionKitTest",
-            plugins: [
-                .plugin(name: "VersionKit")
-            ]
+        .testTarget(
+            name: "VersionKitTests",
+            dependencies: ["VersionKit"]
         ),
     ]
 )

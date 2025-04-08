@@ -3,21 +3,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "VersionKit",
-    products: [
-        .library(
-            name: "VersionKit",
-            targets: ["VersionKit"]
-        ),
-    ],
-    targets: [
-        .target(
-            name: "VersionKit",
-            dependencies: []
-        ),
-        .testTarget(
-            name: "VersionKitTests",
-            dependencies: ["VersionKit"]
-        ),
-    ]
+  name: "VersionKit",
+  products: [
+    .library(
+      name: "VersionKit",
+      targets: ["VersionKit"]
+    )
+  ],
+  targets: [
+    .target(
+      name: "VersionKit",
+      dependencies: []
+    ),
+    .testTarget(
+      name: "VersionKitTests",
+      dependencies: ["VersionKit"]
+    ),
+  ]
 )

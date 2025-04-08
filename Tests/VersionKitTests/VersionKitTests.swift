@@ -8,6 +8,17 @@ struct VersionKit_Validation_Tests {
     func testInvalidVersionString() {
         let invalidVersionString = "invalidVersionString"
 
-        #expect(throws: Error.self) { try Version(invalidVersionString) }
+        #expect(throws: VersionValidationError.self) {
+            try Version(invalidVersionString)
+        }
+    }
+
+    @Test("versions with a non-numeric MAJOR version are invalid")
+    func testNonNumericVersionString() {
+        let nonNumericVersionString = "a.0.0"
+
+        #expect(throws: VersionValidationError.self) {
+            try Version(nonNumericVersionString)
+        }
     }
 }

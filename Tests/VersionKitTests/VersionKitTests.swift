@@ -54,4 +54,17 @@ struct VersionKit_Validation_Tests {
       try Version(nonNumericVersionString)
     }
   }
+
+  @Test(
+    "versions may start with a leading `v`",
+    arguments: [
+      "1.0.0",
+      "v1.0.0",
+      "V1.0.0",
+    ])
+  func testLeadingV(versionString: String) {
+    #expect(throws: Never.self) {
+      try Version(versionString)
+    }
+  }
 }

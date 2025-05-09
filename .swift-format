@@ -74,6 +74,6 @@
   },
   "spacesAroundRangeFormationOperators" : false,
   "spacesBeforeEndOfLineComments" : 2,
-  "tabWidth" : 8,
+  "tabWidth" : 2,
   "version" : 1
 }

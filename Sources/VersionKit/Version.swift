@@ -5,8 +5,7 @@ enum VersionValidationError: Error {
 struct Version {
   init(_ input: String) throws {
     var versionString = input
-    // Handle the case where the version string starts with the letters "v"
-    // or "V"
+    // Handle the case where the version string starts with the letter "v/V"
     if versionString.hasPrefix("v") || versionString.hasPrefix("V") {
       versionString.removeFirst()
     }

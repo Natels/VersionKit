@@ -2,6 +2,7 @@ import Testing
 
 @testable import VersionKit
 
+@MainActor
 @Suite("When validating a version string")
 struct VersionKit_Validation_Tests {
   @Test("versions without MAJOR.MINOR.PATCH format are invalid")

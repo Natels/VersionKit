@@ -1,27 +1,59 @@
-enum VersionValidationError: Error {
-  case invalidFormat(String)
+import RegexBuilder
+
+enum VersionComponent {
+  case major
+  case minor
+  case patch
 }
 
+enum VersionValidationError: Error {
+  case invalidFormat
+  case invalidComponent(VersionComponent)
+}
+
+@MainActor
 struct Version {
+  let major: Int
+  let minor: Int
+  let patch: Int
+
   init(_ input: String) throws {
-    var versionString = input
-    // Handle the case where the version string starts with the letter "v/V"
-    if versionString.hasPrefix("v") || versionString.hasPrefix("V") {
-      versionString.removeFirst()
+    guard let match = input.firstMatch(of: Version.versionExpression) else {
+      throw VersionValidationError.invalidFormat
     }
 
-    let versionComponents = versionString.split(separator: ".")
+    let (_, major, minor, patch) = match.output
 
-    guard versionComponents.count == 3 else {
-      throw VersionValidationError.invalidFormat(
-        "Version string must contaion MAJOR.MINOR.PATCH format"
-      )
+    guard let major = Int(major) else {
+      throw VersionValidationError.invalidComponent(.major)
     }
+    self.major = major
 
-    guard versionComponents.allSatisfy({ $0.allSatisfy(\.isNumber) }) else {
-      throw VersionValidationError.invalidFormat(
-        "Version string must contain only numbers"
-      )
+    guard let minor = Int(minor) else {
+      throw VersionValidationError.invalidComponent(.minor)
+    }
+    self.minor = minor
+
+    guard let patch = Int(patch) else {
+      throw VersionValidationError.invalidComponent(.patch)
+    }
+    self.patch = patch
+  }
+  
+  static let versionExpression = Regex {
+    Optionally {
+      One(.anyOf("vV"))
+    }
+    Capture {
+      OneOrMore(.digit)
+    }
+    "."
+    Capture {
+      OneOrMore(.digit)
+    }
+    "."
+    Capture {
+      OneOrMore(.digit)
     }
   }
 }

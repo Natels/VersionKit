@@ -3,8 +3,8 @@ import Testing
 @testable import VersionKit
 
 @MainActor
-@Suite("When validating a version string")
-struct VersionKit_Validation_Tests {
+@Suite("When validating a version core string")
+struct VersionKit_VersionCoreValidation_Tests {
   @Test("versions without MAJOR.MINOR.PATCH format are invalid")
   func testInvalidVersionString() {
     let invalidVersionString = "invalidVersionString"

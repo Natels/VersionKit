@@ -68,4 +68,20 @@ struct VersionKit_VersionCoreValidation_Tests {
       try Version(versionString)
     }
   }
+
+  @Test(
+    "versions must not contain leading zeros",
+    arguments: [
+      "00.0.0",
+      "01.0.0",
+      "1.00.0",
+      "1.01.0",
+      "1.0.00",
+      "1.0.01",
+    ])
+  func testLeadingZeros(versionString: String) {
+    #expect(throws: VersionValidationError.self) {
+      try Version(versionString)
+    }
+  }
 }

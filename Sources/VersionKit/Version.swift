@@ -20,7 +20,7 @@ struct Version {
   let preReleaseIdentifier: String?
 
   init(_ input: String) throws {
-    guard let match = input.firstMatch(of: Version.versionExpression) else {
+    guard let match = input.wholeMatch(of: Version.versionExpression) else {
       throw VersionValidationError.invalidFormat
     }
 
@@ -32,50 +32,74 @@ struct Version {
     self.preReleaseIdentifier = preReleaseIdentifier
   }
 
-  static let numericIdentifier = Reference(Int.self)
+  static let numeric = Reference(Int.self)
   static let optionalStringIdentifier = Reference(String.self)
 
   static let letter = CharacterClass("a"..."z", "A"..."Z")
+  static let positiveNumber = CharacterClass("1"..."9")
+
   static let nonDigit = Regex {
     ChoiceOf {
       "-"
       Version.letter
     }
   }
+
   static let identifierCharacter = Regex {
     ChoiceOf {
       .digit
       Version.nonDigit
     }
   }
-  static let dotSeperatedIdentifier = Regex {
-    OneOrMore(Version.identifierCharacter)
-    Optionally {
-      OneOrMore {
-        "."
-        OneOrMore(Version.identifierCharacter)
+
+  /// Semver numeric identifier
+  ///
+  /// <numeric identifier> ::= "0"
+  ///                        | <positive digit>
+  ///                        | <positive digit> <digits>
+  static let numericIdentifier = Regex {
+    ChoiceOf {
+      Regex {
+        One("0")
+        ChoiceOf {
+          Lookahead(.anyOf(".-+"))
+          Anchor.endOfSubject
+        }
+      }
+      Regex {
+        Version.positiveNumber
+        ZeroOrMore(.digit)
       }
     }
   }
 
+  static let dotSeperatedIdentifier = Regex {
+    OneOrMore(Version.identifierCharacter)
+    ZeroOrMore {
+      "."
+      OneOrMore(Version.identifierCharacter)
+    }
+  }
+
   static let versionExpression = Regex {
+    Anchor.wordBoundary
     Optionally {
       One(.anyOf("vV"))
     }
-    Capture(as: Version.numericIdentifier) {
-      OneOrMore(.digit)
+    Capture(as: Version.numeric) {
+      Version.numericIdentifier
     } transform: {
       Int($0)!
     }
     "."
-    Capture(as: Version.numericIdentifier) {
-      OneOrMore(.digit)
+    Capture(as: Version.numeric) {
+      Version.numericIdentifier
     } transform: {
       Int($0)!
     }
     "."
-    Capture(as: Version.numericIdentifier) {
-      OneOrMore(.digit)
+    Capture(as: Version.numeric) {
+      Version.numericIdentifier
     } transform: {
       Int($0)!
     }

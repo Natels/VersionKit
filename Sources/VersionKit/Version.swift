@@ -73,11 +73,27 @@ struct Version {
     }
   }
 
+  static let alphaNumericIdentifier = Regex {
+    ChoiceOf {
+      Version.nonDigit
+      Version.positiveNumber
+    }
+    ZeroOrMore {
+      Version.identifierCharacter
+    }
+  }
+
   static let dotSeperatedIdentifier = Regex {
-    OneOrMore(Version.identifierCharacter)
+    ChoiceOf {
+      Version.numericIdentifier
+      Version.alphaNumericIdentifier
+    }
     ZeroOrMore {
       "."
-      OneOrMore(Version.identifierCharacter)
+      ChoiceOf {
+        Version.numericIdentifier
+        Version.alphaNumericIdentifier
+      }
     }
   }
 

@@ -43,4 +43,17 @@ struct VersionPreReleaseTests {
 
     #expect(version.preReleaseIdentifier == test.expectedPreReleaseIdentifier)
   }
+
+  @Test(
+    "they must not include leading zeros",
+    arguments: [
+      "1.0.0-01alpha",
+      "1.0.0-001beta.1",
+      "1.0.0-000.3.7",
+    ])
+  func testPreReleaseIdentifierLeadingZerosAreNotAllowed(versionString: String) throws {
+    #expect(throws: VersionValidationError.self) {
+      try Version(versionString)
+    }
+  }
 }

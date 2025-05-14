@@ -36,7 +36,6 @@ struct Version {
   static let optionalStringIdentifier = Reference(String.self)
 
   static let letter = CharacterClass("a"..."z", "A"..."Z")
-  static let positiveNumber = CharacterClass("1"..."9")
 
   static let nonDigit = Regex {
     ChoiceOf {
@@ -52,33 +51,23 @@ struct Version {
     }
   }
 
-  /// Semver numeric identifier
-  ///
-  /// <numeric identifier> ::= "0"
-  ///                        | <positive digit>
-  ///                        | <positive digit> <digits>
   static let numericIdentifier = Regex {
     ChoiceOf {
+      One("0")
       Regex {
-        One("0")
-        ChoiceOf {
-          Lookahead(.anyOf(".-+"))
-          Anchor.endOfSubject
+        NegativeLookahead {
+          "0"
         }
-      }
-      Regex {
-        Version.positiveNumber
-        ZeroOrMore(.digit)
+        OneOrMore(.digit)
       }
     }
   }
 
   static let alphaNumericIdentifier = Regex {
-    ChoiceOf {
-      Version.nonDigit
-      Version.positiveNumber
+    NegativeLookahead {
+      "0"
     }
-    ZeroOrMore {
+    OneOrMore {
       Version.identifierCharacter
     }
   }

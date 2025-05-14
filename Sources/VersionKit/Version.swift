@@ -24,16 +24,16 @@ struct Version {
       throw VersionValidationError.invalidFormat
     }
 
-    let (_, major, minor, patch, preReleaseIdentifier) = match.output
-
-    self.major = major
-    self.minor = minor
-    self.patch = patch
-    self.preReleaseIdentifier = preReleaseIdentifier
+    self.major = match[Version.major]
+    self.minor = match[Version.minor]
+    self.patch = match[Version.patch]
+    self.preReleaseIdentifier = match[Version.preReleaseTag]
   }
 
-  static let numeric = Reference(Int.self)
-  static let optionalStringIdentifier = Reference(String.self)
+  static let major = Reference(Int.self)
+  static let minor = Reference(Int.self)
+  static let patch = Reference(Int.self)
+  static let preReleaseTag = Reference(String?.self)
 
   static let letter = CharacterClass("a"..."z", "A"..."Z")
 
@@ -91,26 +91,26 @@ struct Version {
     Optionally {
       One(.anyOf("vV"))
     }
-    Capture(as: Version.numeric) {
+    Capture(as: Version.major) {
       Version.numericIdentifier
     } transform: {
       Int($0)!
     }
     "."
-    Capture(as: Version.numeric) {
+    Capture(as: Version.minor) {
       Version.numericIdentifier
     } transform: {
       Int($0)!
     }
     "."
-    Capture(as: Version.numeric) {
+    Capture(as: Version.patch) {
       Version.numericIdentifier
     } transform: {
       Int($0)!
     }
     Optionally {
       "-"
-      Capture(as: Version.optionalStringIdentifier) {
+      Capture(as: Version.preReleaseTag) {
         Version.dotSeperatedIdentifier
       } transform: {
         String($0)

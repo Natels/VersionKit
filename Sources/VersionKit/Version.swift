@@ -29,7 +29,9 @@ struct Version {
     self.patch = match[Version.patch]
     self.preReleaseIdentifier = match[Version.preReleaseTag]
   }
+}
 
+extension Version {
   static let major = Reference(Int.self)
   static let minor = Reference(Int.self)
   static let patch = Reference(Int.self)
